@@ -643,6 +643,113 @@ function handleCardClick(event, id) {
   openScriptViewer(id, event);
 }
 
+function openCreateModal(defaultNiche = 'Facts') {
+  state.currentEditingId = null;
+  const titleEl = document.getElementById('modalTitleText');
+  if (titleEl) titleEl.textContent = 'Plan Short / Reel';
+
+  const delBtn = document.getElementById('deleteVideoBtn');
+  if (delBtn) delBtn.style.display = 'none';
+
+  // Reset form fields
+  const titleInput = document.getElementById('modalVideoTitle');
+  if (titleInput) titleInput.value = '';
+
+  const nicheSelect = document.getElementById('modalNiche');
+  if (nicheSelect) nicheSelect.value = defaultNiche || 'Facts';
+
+  const platformSelect = document.getElementById('modalPlatform');
+  if (platformSelect) platformSelect.value = 'Both';
+
+  const statusSelect = document.getElementById('modalStatus');
+  if (statusSelect) statusSelect.value = 'Idea';
+
+  const hookInput = document.getElementById('modalHook');
+  if (hookInput) hookInput.value = '';
+
+  const sceneInput = document.getElementById('modalSceneScript');
+  if (sceneInput) sceneInput.value = '';
+
+  const narrationInput = document.getElementById('modalNarration');
+  if (narrationInput) narrationInput.value = '';
+
+  const endingInput = document.getElementById('modalEnding');
+  if (endingInput) endingInput.value = '';
+
+  const hashtagsInput = document.getElementById('modalHashtags');
+  if (hashtagsInput) hashtagsInput.value = '';
+
+  const descInput = document.getElementById('modalDescription');
+  if (descInput) descInput.value = '';
+
+  const notesInput = document.getElementById('modalNotes');
+  if (notesInput) notesInput.value = '';
+
+  updateModalNicheHelpers(defaultNiche || 'Facts');
+  updateNarrationStats();
+  switchModalTab('script');
+
+  const modal = document.getElementById('scriptModal');
+  if (modal) modal.classList.add('active');
+}
+
+function openEditModal(id, event) {
+  if (event) event.stopPropagation();
+  const v = StorageManager.getVideoById(id);
+  if (!v) return;
+
+  state.currentEditingId = id;
+  const titleEl = document.getElementById('modalTitleText');
+  if (titleEl) titleEl.textContent = 'Edit Short / Reel';
+
+  const delBtn = document.getElementById('deleteVideoBtn');
+  if (delBtn) delBtn.style.display = 'inline-flex';
+
+  // Populate form fields with existing video data
+  const titleInput = document.getElementById('modalVideoTitle');
+  if (titleInput) titleInput.value = v.title || '';
+
+  const nicheSelect = document.getElementById('modalNiche');
+  if (nicheSelect) nicheSelect.value = v.niche || 'Facts';
+
+  const platformSelect = document.getElementById('modalPlatform');
+  if (platformSelect) platformSelect.value = v.targetPlatform || 'Both';
+
+  const statusSelect = document.getElementById('modalStatus');
+  if (statusSelect) statusSelect.value = v.status || 'Idea';
+
+  const hookInput = document.getElementById('modalHook');
+  if (hookInput) hookInput.value = v.hook || '';
+
+  const sceneInput = document.getElementById('modalSceneScript');
+  if (sceneInput) sceneInput.value = v.sceneScript || '';
+
+  const narrationInput = document.getElementById('modalNarration');
+  if (narrationInput) narrationInput.value = v.narration || '';
+
+  const endingInput = document.getElementById('modalEnding');
+  if (endingInput) endingInput.value = v.ending || '';
+
+  const hashtagsInput = document.getElementById('modalHashtags');
+  if (hashtagsInput) {
+    hashtagsInput.value = Array.isArray(v.hashtags) ? v.hashtags.join(' ') : (v.hashtags || '');
+  }
+
+  const descInput = document.getElementById('modalDescription');
+  if (descInput) descInput.value = v.description || '';
+
+  const notesInput = document.getElementById('modalNotes');
+  if (notesInput) notesInput.value = v.notes || '';
+
+  updateModalNicheHelpers(v.niche || 'Facts');
+  updateNarrationStats();
+  switchModalTab('script');
+
+  closeAllModals();
+  const modal = document.getElementById('scriptModal');
+  if (modal) modal.classList.add('active');
+}
+
 function closeAllModals() {
   document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('active'));
 }
